@@ -1,6 +1,5 @@
 const jwt = require("jsonwebtoken");
 const secretKey = require("../config/jwt.config");
-const sql = require("../models/db");
 
 const verifyToken = (req, res, next) => {
   const token = req.headers["x-access-token"];
@@ -13,19 +12,10 @@ const verifyToken = (req, res, next) => {
       return res.status(401).send({ message: "Unauthorized" });
     }
 
-    const id = decoded.id;
-    sql.query("SELECT * FROM `user` WHERE user_id = ?", [id], (err, res) => {
-      if (err) {
-        console.log("Query error:", err);
-        result(err, null);
-        return;
-      }
+    req.user = decoded;
 
-      req.user = res;
-      result(null, res);
-    });
-    console.log("auth", req.user);
-    console.log("auth", id);
+    console.log("User info from the JWT payload:", req.user);
+
     next();
   });
 };

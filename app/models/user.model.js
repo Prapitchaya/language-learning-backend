@@ -40,15 +40,24 @@ User.createUser = (newUser, result) => {
       result(err, null);
       return;
     }
-    const token = jwt.sign({ id: res.insertId }, secretKey.secret, {
+    const payload = {
+      id: res.insertId,
+      ...newUser,
+    };
+
+    const token = jwt.sign(payload, secretKey.secret, {
       expiresIn: expireTime,
     });
-    result(null, { id: res.insertId, ...newUser, accessToken: token });
-    console.log("Created user:", {
+
+    const response = {
       id: res.insertId,
       ...newUser,
       accessToken: token,
-    });
+    };
+
+    result(null, response);
+
+    console.log("Created user:", response);
   });
 };
 
