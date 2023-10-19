@@ -37,6 +37,7 @@ const createNewUser = (req, res) => {
     email: req.body.email,
     username: req.body.username,
     password: hashedPassword,
+    role: req.body.role,
   };
 
   User.createUser(userObject, (err, data) => {
@@ -84,10 +85,16 @@ const login = (req, res) => {
 };
 
 const getAllUsers = (req, res) => {
+  const userRole = req.user.role;
+  console.log(req.user);
+  if (userRole !== "admin") {
+    return res.status(403).send({ message: "You do not have permission" });
+  }
+
   User.getAllUsers((err, data) => {
     if (err) {
       res.status(500).send({
-        message: err.message || "Some error occurred while getting",
+        message: err.message || "Some error occurred while getting users",
       });
     } else {
       res.send(data);
