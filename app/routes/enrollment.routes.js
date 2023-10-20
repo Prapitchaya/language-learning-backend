@@ -6,8 +6,12 @@ module.exports = (app) => {
   const router = express.Router();
 
   router.post("/", authJwt, enrollment_controller.createEnrollment);
-  router.get("/:user_id", authJwt, enrollment_controller.getEnrollmentsForUser);
-
+  router.get(
+    "/getEnroll/:user_id",
+    authJwt,
+    enrollment_controller.getEnrollmentsForUser
+  );
+  router.get("/allEnroll", authJwt, enrollment_controller.getAllEnrollments);
   router.get(
     "/check/:user_id/:course_id",
     authJwt,

@@ -13,7 +13,6 @@ const verifyToken = (req, res, next) => {
     }
 
     req.user = decoded;
-
     console.log("User info from the JWT payload:", req.user);
 
     next();

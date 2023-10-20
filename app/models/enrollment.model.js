@@ -47,6 +47,17 @@ Enrollment.getEnrollmentsForUser = (user_id, result) => {
   );
 };
 
+Enrollment.getAllEnrollments = (result) => {
+  sql.query("SELECT * FROM course_enrollment", (err, res) => {
+    if (err) {
+      console.log("Enrollments retrieval error: ", err);
+      result(err, null);
+      return;
+    }
+    result(null, res);
+  });
+};
+
 Enrollment.checkEnrollmentStatus = (user_id, course_id, result) => {
   sql.query(
     "SELECT * FROM course_enrollment WHERE user_id = ? AND course_id = ?",

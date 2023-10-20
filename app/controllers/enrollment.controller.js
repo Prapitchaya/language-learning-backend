@@ -24,6 +24,21 @@ const getEnrollmentsForUser = (req, res) => {
   });
 };
 
+const getAllEnrollments = (req, res) => {
+  console.log("request user:", req.user);
+  const userRole = req.user.role;
+  if (userRole !== "admin") {
+    return res.status(403).send({ message: "You do not have permission" });
+  }
+  Enrollment.getAllEnrollments((err, enrollments) => {
+    if (err) {
+      res.status(500).send({ message: "Failed to retrieve enrollments" });
+    } else {
+      res.send(enrollments);
+    }
+  });
+};
+
 const checkEnrollmentStatus = (req, res) => {
   const { user_id, course_id } = req.params;
 
@@ -39,5 +54,6 @@ const checkEnrollmentStatus = (req, res) => {
 module.exports = {
   createEnrollment,
   getEnrollmentsForUser,
+  getAllEnrollments,
   checkEnrollmentStatus,
 };

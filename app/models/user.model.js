@@ -48,7 +48,7 @@ User.createUser = (newUser, result) => {
     const token = jwt.sign(payload, secretKey.secret, {
       expiresIn: expireTime,
     });
-
+    console.log("user model", payload);
     const response = {
       id: res.insertId,
       ...newUser,
@@ -82,12 +82,24 @@ User.loginUser = (account, result) => {
               return;
             }
             if (match) {
-              const token = jwt.sign({ id: res[0].user_id }, secretKey.secret, {
+              const userData = {
+                user_id: res[0].user_id,
+                username: res[0].username,
+                email: res[0].email,
+                first_name: res[0].first_name,
+                last_name: res[0].last_name,
+                role: res[0].role,
+              };
+
+              const token = jwt.sign(userData, secretKey.secret, {
                 expiresIn: expireTime,
               });
+
               console.log("Login success. Token:", token);
-              res[0].accessToken = token;
-              result(null, res[0]);
+              result(null, {
+                user: userData,
+                accessToken: token,
+              });
             } else {
               console.log("Password does not match");
               result({ kind: "invalid_pass" }, null);
