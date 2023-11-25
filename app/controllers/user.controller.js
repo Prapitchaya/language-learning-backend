@@ -129,6 +129,10 @@ const updateUserCtrl = (req, res) => {
 };
 
 const deleteUser = (req, res) => {
+  const userRole = req.user.role;
+  if (userRole !== "admin") {
+    return res.status(403).send({ message: "You do not have permission" });
+  }
   User.removeUser(req.params.id, (err, result) => {
     if (err) {
       if (err.kind == "not_found") {

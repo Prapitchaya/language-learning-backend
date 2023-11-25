@@ -156,8 +156,25 @@ User.removeUser = (id, result) => {
       return;
     }
     console.log("Deleted user id: " + id);
-    result(null, { id });
+    result(null, { id, message: `Deleted user_id: ${id} successfully` });
   });
 };
+
+User.updatePassword = (user_id, newHashedPassword, result) => {
+  sql.query(
+    "UPDATE user SET password = ? WHERE user_id = ?",
+    [newHashedPassword, user_id],
+    (err, res) => {
+      if (err) {
+        console.log("Error updating user password: " + err);
+        result(err, null);
+        return;
+      }
+      console.log("Password updated for user_id: " + user_id);
+      result(null, res.affectedRows);
+    }
+  );
+};
+
 
 module.exports = User;

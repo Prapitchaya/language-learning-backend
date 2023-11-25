@@ -3,7 +3,7 @@ const sql = require("./db");
 const Enrollment = function (enrollment) {
   this.user_id = enrollment.user_id;
   this.course_id = enrollment.course_id;
-  this.enrollment_date = new Date(); 
+  this.enrollment_date = new Date();
 };
 
 Enrollment.create = (user_id, course_id, result) => {
@@ -79,4 +79,26 @@ Enrollment.checkEnrollmentStatus = (user_id, course_id, result) => {
   );
 };
 
+Enrollment.removeEnrollment = (id, result) => {
+  sql.query(
+    "DELETE FROM course_enrollment WHERE enrollment_id = ?",
+    [id],
+    (err, res) => {
+      if (err) {
+        console.log("Query error: " + err);
+        result(err, null);
+        return;
+      }
+      if (res.affectedRows === 0) {
+        result({ kind: "not_found" }, null);
+        return;
+      }
+      console.log("Deleted enrollment id: " + id);
+      result(null, {
+        enrollment_id: id,
+        message: `Deleted enrollment_id: ${id} successfully`,
+      });
+    }
+  );
+};
 module.exports = Enrollment;

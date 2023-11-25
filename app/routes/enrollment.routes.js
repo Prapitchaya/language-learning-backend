@@ -17,5 +17,8 @@ module.exports = (app) => {
     authJwt,
     enrollment_controller.checkEnrollmentStatus
   );
+
+  router.delete("/:id", authJwt, enrollment_controller.deleteEnrollments);
+
   app.use("/api/enrollment", router);
 };

@@ -50,10 +50,32 @@ const checkEnrollmentStatus = (req, res) => {
     }
   });
 };
+const deleteEnrollments = (req, res) => {
+  const userRole = req.user.role;
+  if (userRole !== "admin") {
+    return res.status(403).send({ message: "You do not have permission" });
+  }
+  Enrollment.removeEnrollment(req.params.id, (err, result) => {
+    if (err) {
+      if (err.kind == "not_found") {
+        res.status(401).send({
+          message: "Not found enrollment: " + req.params.id,
+        });
+      } else {
+        res.status(500).send({
+          message: "Error delete enrollment: " + req.params.id,
+        });
+      }
+    } else {
+      res.send(result);
+    }
+  });
+};
 
 module.exports = {
   createEnrollment,
   getEnrollmentsForUser,
   getAllEnrollments,
   checkEnrollmentStatus,
+  deleteEnrollments,
 };

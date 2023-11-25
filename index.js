@@ -19,6 +19,8 @@ require("./app/routes/certificate.routes")(app);
 require("./app/routes/enrollment.routes")(app);
 require("./app/routes/progress.routes")(app);
 require("./app/routes/course.routes")(app);
+require("./app/routes/passwordReset.routes")(app);
+require("./app/routes/userContent.routes")(app);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
